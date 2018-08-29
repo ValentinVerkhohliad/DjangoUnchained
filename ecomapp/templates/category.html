@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="col-sm-12">
+    <h2>{{ category.name }}</h2>
+    <hr>
+    <div class="row">
+    {% for product in products_of_category %}
+    <div class='col-sm-4'>
+        <img src="{{ product.image.url }}" style="width:250px; height: 250px;">
+        <h4 class="text-cener">{{ product.title }}</h4>
+        <p style="font-size:20px;"> Ціна: <strong>{{ product.price }}</strong></p>
+        <a href="#" class="add_to_cart" data-slug="{{ product.slug }}">
+        <button class="btn btn-danger">Додати в кошик</button></a>
+    </div>
+    {% endfor %}
+</div>
+</div>
+</div>
+<script src='{% static "js/jquery.js" %}'></script>
+<script>
+    $(document).ready(function(){
+        $('.add_to_cart').on('click', function(e){
+            e.preventDefault()
+            product_slug = $(this).attr('data-slug')
+            data = {
+                product_slug: product_slug
+            }
+            $.ajax({
+                type: "GET",
+                url: '{% url "add_to_cart" %}',
+                data: data,
+                success: function(data){
+                    $("#cart_count").html(data.cart_total)
+                }
+            })
+        })
+    })
+</script>
+{% endblock content %}
